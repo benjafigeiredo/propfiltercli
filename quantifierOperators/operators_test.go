@@ -91,3 +91,62 @@ func TestEqualToOperator_Evaluate(t *testing.T) {
 		})
 	}
 }
+
+// TestIncludeOperator_Evaluate is a function that tests the Evaluate method of the IncludeOperator struct.
+func TestIncludeOperator_Evaluate(t *testing.T) {
+	// we define the fields struct that will be used to create the include operator
+	type fields struct {
+		value1 string
+		values []string
+	}
+
+	// we define the struct to hold test cases, and we create instances
+	tests := []struct {
+		name   string
+		fields fields
+		want   bool
+	}{
+		{"Test 1", fields{"a", []string{"b", "c"}}, false},
+		{"Test 2", fields{"garage", []string{"garage", "yard", "pool"}}, true},
+		{"Test 3", fields{"kitchen", []string{"garage", "yard", "pool"}}, false},
+	}
+
+	// iterate over the tests and run them
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			i := NewIncludeOperator(tt.fields.value1, tt.fields.values)
+			if got := i.Evaluate(); got != tt.want {
+				t.Errorf("IncludeOperator.Evaluate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMatchOperator_Evaluate(t *testing.T) {
+	// we define the fields struct that will be used to create the match operator
+	type fields struct {
+		value1 string
+		value2 string
+	}
+
+	// we define the struct to hold test cases, and we create instances
+	tests := []struct {
+		name   string
+		fields fields
+		want   bool
+	}{
+		{"Test 1", fields{"2 bathrooms", "the property includes 2 bathrooms"}, true},
+		{"Test 2", fields{"garage", "the property includes garage"}, true},
+		{"Test 3", fields{"kitchen", "the property includes garage"}, false},
+	}
+
+	// iterate over the tests and run them
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := NewMatchOperator(tt.fields.value1, tt.fields.value2)
+			if got := m.Evaluate(); got != tt.want {
+				t.Errorf("MatchOperator.Evaluate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
