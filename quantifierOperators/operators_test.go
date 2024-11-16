@@ -150,3 +150,34 @@ func TestMatchOperator_Evaluate(t *testing.T) {
 		})
 	}
 }
+
+// TestDistanceOperator_Evaluate is a function that tests the Evaluate method of the DistanceOperator struct.
+func TestDistanceOperator_Evaluate(t *testing.T) {
+	// we define the fields struct that will be used to create the distance operator
+	type fields struct {
+		value1   []float64
+		value2   []float64
+		distance float64
+	}
+
+	// we define the struct to hold test cases, and we create instances
+	tests := []struct {
+		name   string
+		fields fields
+		want   bool
+	}{
+		{"Test 1", fields{[]float64{1.0, 1.0}, []float64{2.0, 1.0}, 1.0}, true},
+		{"Test 2", fields{[]float64{3.4, 1}, []float64{2, 2.56}, 1.0}, false},
+		{"Test 3", fields{[]float64{1.45, 10.45}, []float64{2.3, 26.7}, 10}, false},
+	}
+
+	// iterate over the tests and run them
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := NewDistanceOperator(tt.fields.value1, tt.fields.value2, tt.fields.distance)
+			if got := d.Evaluate(); got != tt.want {
+				t.Errorf("DistanceOperator.Evaluate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
